@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>星光共谱等级-经验换算</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(210deg, #dd3333,#ddcc33);
+        }
+        h1 {
+            text-align: center;
+            margin-top: 40vh; /* 垂直居中 */
+            font-family: Arial, sans-serif;
+            font-size: 3rem;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* 添加文字阴影效果 */
+        }
+        #chart-container {
+            width: 70%;
+            margin: 20px auto;
+            border: 1px solid #ccc;
+            position: relative;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+            padding: 20px;
+        }
+        #calculate {
+            width: 70%;
+            margin: 20px auto;
+            border: 1px solid #ccc;
+            position: relative;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            text-align: center; /* 居中对齐 */
+        }
+        #chart {
+            width: 100%;
+            height: 400px;
+            border-radius: 10px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .input-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 18px;
+            color: #333; /* 修改字体颜色 */
+        }
+
+        .input-group input[type="number"] {
+            width: 35%;
+            padding: 10px;
+            margin-top: 5px;
+            margin-bottom: 10px;
+            text-align: center;
+            font-size: 18px;
+            border: 5px solid #ccc; /* 添加边框 */
+            border-radius: 10px; /* 圆角边框 */
+            transition: border-color 0.5s ease; /* 添加过渡效果 */
+        }
+
+        .input-group input[type="number"]:focus {
+            border-color: #FFD700; /* 输入框获取焦点时边框颜色变化 */
+        }
+
+        .input-group button {
+            cursor: pointer;
+            background-color: #ff69b4;
+            color: #fff;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin: 5 0px;
+            font-size: 20px; /* 调整按钮字体大小 */
+            transition: background-color 0.3s ease; /* 添加过渡效果 */
+        }
+
+        .input-group button:hover {
+            background-color: #ff0070; /* 按钮悬停时背景色变化 */
+            transform: scale(1.05); /* 鼠标悬停时按钮放大 */
+        }
+
+        #output {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 10px;
+            margin-top: 20px;
+            text-align: left;
+            font-size: 20px;
+            color: #2266dd;
+        }
+        #result{
+            width: 60%;
+            margin: 20px auto;
+            border: 1px solid #ccc;
+            position: relative;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(100, 100, 100, 0.5);
+            padding: 20px;
+        }
+        #calculate-btn {
+            font-weight: bold;
+            cursor: pointer;
+            background-color: #2266dd;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin: 5px 0;
+            font-size: 20px;
+            transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease; /* 添加过渡效果 */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 添加阴影效果 */
+        }
+
+        #calculate-btn:hover {
+            background-color: #ff0070;
+            transform: translateY(-10px);
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.5); /* 悬停时阴影效果变化 */
+            transform: scale(1.1);
+        }
+        #color-picker {
+            margin: 20px;
+            margin-top: 0px;
+            display: inline-block;
+            width: 60px;
+            height: 30px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.5s ease;
+            outline: none;
+        }
+
+        #color-picker:focus {
+            transform: scale(1.2);
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.8);
+        }
+        #color-picker:hover {
+            transform: scale(1.2);
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.8);
+        }
+
+        #colorset {
+            display: inline-block;
+            margin:20px;
+            width:230px;
+            height:70px;
+            font-weight: bold;
+            cursor: pointer;
+            background-color: #4488ff;
+            color: #fff;
+            border: none;
+            border-radius: 15px;
+            font-size: 20px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+        }
+        #para{
+            margin:20px;
+        }
+
+        /* 调整滑块的样式 */
+        input[type="range"] {
+            -webkit-appearance: none; /* 隐藏默认的滑块样式 */
+            appearance: none;
+            width: 100%;
+            height: 10px;
+            background: #C3C3C3; /* 轨道的颜色 */
+            outline: none;
+            border-radius: 10px; /* 圆角 */
+        }
+
+        /* 调整滑块的样式 */
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none; /* 隐藏默认的滑块样式 */
+            appearance: none;
+            width: 20px; /* 滑块的宽度 */
+            height: 20px; /* 滑块的高度 */
+            background: #007bff; /* 滑块的颜色 */
+            border-radius: 30%; /* 将滑块样式设为圆形 */
+            cursor: pointer;
+        }
+
+        /* 设置滑块拖动时的样式 */
+        input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            background: #007bff;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        /* 设置滑块的悬停样式 */
+        input[type="range"]::-webkit-slider-thumb:hover {
+            background: #0056b3; /* 悬停时的颜色 */
+        }
+
+        input[type="range"]::-moz-range-thumb:hover {
+            background: #0056b3;
+        }
+
+    </style>
+</head>
+<body>
+    <h1>星光共谱等级-经验换算</h1>
+    <div id="chart-container">
+        <h2 style="text-align: center;">等级-经验函数图</h2>
+        <div id="chart"></div>
+        <input type="range" class="zoom-slider" min="0" max="2024" value="2024" step="1">
+        <div id="colorset">
+            <p id="para">颜色修改
+                <input type="color" id="color-picker" value="#007bff">
+            </p>
+        </div>
+    </div>
+    <div id="calculate">
+        <h2 style="text-align: center;">目标等级时间计算</h2>
+        <div class="input-group">
+            <label for="current-level">当前等级：
+            <input type="number" id="current-level" min="1" value="1">
+            <button onclick="decreaseValue('current-level')">-</button>
+            <button onclick="increaseValue('current-level')">+</button></label>
+        </div>
+        <div class="input-group">
+            <label for="target-level">目标等级：
+            <input type="number" id="target-level" min="1" value="1">
+            <button onclick="decreaseValue('target-level')">-</button>
+            <button onclick="increaseValue('target-level')">+</button></label>
+        </div>
+        <div class="input-group">
+            <label for="exp-per-hour">每小时获得经验值：(钓鱼：366500)</label>
+            <input type="number" id="exp-per-hour" min="1" value="366500">
+            <button onclick="decreaseValue('exp-per-hour')">-</button>
+            <button onclick="increaseValue('exp-per-hour')">+</button>
+        </div>
+        <div class="input-group">
+            <label for="hours-per-day">平均每天挂机时间（小时）：</label>
+            <input type="number" id="hours-per-day" min="0.5" max="24" value="1">
+            <button onclick="decreaseValue('hours-per-day')">-</button>
+            <button onclick="increaseValue('hours-per-day')">+</button>
+        </div>
+
+        <div id="result">
+            <div id="output"></div>
+            <br>
+            <button onclick="calculateExp()" id="calculate-btn">计算</button>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+    <script>
+        var item_1=0;
+        var item_2=0;
+        var chartmax=2024;
+        var chartOptions = {
+            chart: {
+                type: 'line',
+                zoom: {
+                    enabled: false
+                }
+            },
+            series: [{
+                name: '该等级升级所需经验',
+                data: []
+            }],
+            xaxis: {
+                type: 'numeric',
+                labels: {
+                    formatter: function (value) {
+                        return Math.floor(value);
+                    }
+                },
+                tickAmount: 10,
+                tickPlacement: 'between',
+                min: 0,
+                max: chartmax,
+            },
+            yaxis: {
+                labels: {
+                    formatter: function (value) {
+                        return Math.floor(value);
+                    }
+                }
+            },
+            grid: {
+                borderColor: '#f0f0f0',
+                padding: {
+                    right: 30,
+                    left: 20
+                }
+            }
+        };
+
+        var chart = new ApexCharts(document.querySelector("#chart"), chartOptions);
+        chart.render();
+
+        function generateData(start, end) {
+            var data = [];
+            for (var i = start; i <= end; i++) {
+                data.push({x: i, y: 0.32*Math.pow(i, 1.8) + 2500});
+            }
+            return data;
+        }
+
+        // 更新图表数据
+        function updateChartData(xMax) {
+            chart.updateSeries([{data: generateData(0, xMax)}]);
+        }
+
+        // 初始化图表
+        updateChartData(chartmax);
+
+        // 拖动进度条时更新图表
+        var slider = document.querySelector('.zoom-slider');
+        slider.addEventListener('input', function() {
+            updateChartData(parseInt(this.value));
+        });
+
+        // 监听颜色选择器的变化事件
+        var colorPicker = document.getElementById('color-picker');
+        colorPicker.addEventListener('input', function() {
+            var color = this.value;
+            // 更新图表线条颜色
+            chart.updateOptions({
+                colors: [color]
+            });
+        });
+
+        // 函数：减小输入框的值
+        function decreaseValue(inputId) {
+            var input = document.getElementById(inputId);
+            var value = parseInt(input.value);
+            if (value > input.min) {
+                input.value = value - 1;
+            }
+        }
+
+        // 函数：增加输入框的值
+        function increaseValue(inputId) {
+            var input = document.getElementById(inputId);
+            var value = parseInt(input.value);
+            input.value = value + 1;
+        }
+
+        // 函数：计算经验值
+        function calculateExp() {
+            var currentLevel = parseInt(document.getElementById('current-level').value);
+            var targetLevel = parseInt(document.getElementById('target-level').value);
+            var expPerHour = parseInt(document.getElementById('exp-per-hour').value);
+            var hoursPerDay = parseFloat(document.getElementById('hours-per-day').value);
+            if(targetLevel<currentLevel){
+                showCustomAlert("【计算无效】:等级错误",'需使"目标等级"≥"当前等级"QAQ',"error",'好的喵~૮₍ ˃ ⤙ ˂ ₎ა');
+                if(item_1==0){
+                    item_1=item_1+1;
+                    showCustomAlert("【达成成就】","反方向的升级？？ᓫ(°⌑°)ǃ","success","好耶！( ╹▽╹ )");
+                }
+                return false;
+            }
+            var totalExp = 0;
+            for (var i = currentLevel; i < targetLevel; i++) {
+                totalExp += 0.32 * Math.pow(i, 1.8) + 2500;
+            }
+
+            var hours = totalExp / expPerHour;
+            if(hoursPerDay>24){
+                hoursPerDay=24;
+                showCustomAlert("【计算无效】:时间错误","一天最多只有24小时哦！！QWQ","error",'好的喵~૮₍ ˃ ⤙ ˂ ₎ა');
+                return false;
+                }
+            if(hoursPerDay<0){
+                showCustomAlert("【计算无效】:时间错误","你可以不挂机，但是不能预支时间Σ( ° △ °|||)","error",'好的喵~૮₍ ˃ ⤙ ˂ ₎ა');
+                if(item_2==0){
+                    item_2=item_2+1;
+                    showCustomAlert("【达成成就】","⭐时光倒流","success","好耶！( ╹▽╹ )");
+                }
+                return false;
+            }
+            var days = hours / hoursPerDay;
+            var gexp = totalExp%10000
+            var wanxp = ((totalExp/10000)%10000+0.5).toFixed(0)-1
+            var yiexp = (totalExp/100000000+0.5).toFixed(0)-1
+            showCustomAlert("【计算成功】","芜湖✧(≖ ◡ ≖✿)，快去查看吧！","success","芜湖！(ᕑᗢᓫ∗)˒");
+            document.getElementById('output').innerHTML = "所需总经验值：" +totalExp.toFixed(0)+"  （ "+yiexp.toFixed(0)+" 亿 "+wanxp.toFixed(0)+" 万 "+gexp.toFixed(0)+ " ）<br><br>" +
+                                                            "所需时间：" + hours.toFixed(2)+ " 小时   （ " + days.toFixed(2)+" 天 ）";
+
+        }
+        // 提示框自定义
+        function showCustomAlert(inputtitle,inputtext,state,ESC) {
+            Swal.fire({
+                title: inputtitle,
+                text: inputtext,
+                icon: state, // 提示框图标:'warning', 'success', 'error', 'info', 'question'
+                confirmButtonText: '好叭',
+                cancelButtonText: ESC,
+                showCancelButton: true,
+            });
+        }
+
+    </script>
+</body>
+</html>
