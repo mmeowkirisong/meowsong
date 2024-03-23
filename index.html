@@ -1,0 +1,1522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>《星光共谱曲》技能系统</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(210deg, #dd3333,#ddcc33);
+        }
+        h1 {
+            text-align: center;
+            margin-top: 40vh; /* 垂直居中 */
+            font-family: Arial, sans-serif;
+            font-size: 3rem;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* 添加文字阴影效果 */
+        }
+        #chart-container {
+            width: 70%;
+            margin: 30px auto;
+            border: 1px solid #ccc;
+            position: relative;
+            background-color: #fff;
+            border-radius: 30px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+            padding: 20px;
+        }
+        #calculate,#calculate_2{
+            width: 70%;
+            margin: 30px auto;
+            border: 1px solid #ccc;
+            position: relative;
+            background-color: #fff;
+            border-radius: 30px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            text-align: center; /* 居中对齐 */
+        }
+        #chart {
+            width: 100%;
+            height: 400px;
+            border-radius: 10px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .input-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 18px;
+            color: #333; /* 修改字体颜色 */
+        }
+
+        .input-group input[type="number"] {
+            width: 35%;
+            padding: 10px;
+            margin-top: 5px;
+            margin-bottom: 10px;
+            text-align: center;
+            font-size: 18px;
+            border: 5px solid #ccc; /* 添加边框 */
+            border-radius: 10px; /* 圆角边框 */
+            transition: border-color 0.5s ease; /* 添加过渡效果 */
+        }
+
+        .input-group input[type="number"]:focus {
+            border-color: #FFD700; /* 输入框获取焦点时边框颜色变化 */
+        }
+
+        .input-group button {
+            cursor: pointer;
+            background-color: #ff69b4;
+            color: #fff;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin: 5 0px;
+            font-size: 20px; /* 调整按钮字体大小 */
+            transition: background-color 0.3s ease; /* 添加过渡效果 */
+        }
+
+        .input-group button:hover {
+            background-color: #ff0070; /* 按钮悬停时背景色变化 */
+            transform: scale(1.05); /* 鼠标悬停时按钮放大 */
+        }
+
+        #output,#output_2 {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 10px;
+            margin-top: 20px;
+            text-align: left;
+            font-size: 20px;
+            color: #2266dd;
+        }
+        #output_2{
+            text-align: center;
+        }
+        #result,#result_2,.show_expperhour{
+            width: 60%;
+            margin: 20px auto;
+            border: 1px solid #ccc;
+            position: relative;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(100, 100, 100, 0.3);
+            padding: 20px;
+            transition: background-color 1s ease, transform 0.2s ease, box-shadow 0.2s ease; /* 添加过渡效果 */
+        }
+        .show_expperhour{
+            width: 90%;
+            border: 0px solid #ccc;
+            border-radius: 20px;
+        }
+        .show_expperhour:hover{
+            background-color:#ffd;
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.4); /* 悬停时阴影效果变化 */
+            transform: scale(1.008);
+        }
+        #calculate-btn,#calculate-btn_2{
+            font-weight: bold;
+            cursor: pointer;
+            background-color: #2266dd;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin: 5px 0;
+            font-size: 20px;
+            transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease; /* 添加过渡效果 */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 添加阴影效果 */
+        }
+
+        #calculate-btn:hover,#calculate-btn_2:hover{
+            background-color: #1133aa;
+            transform: translateY(-10px);
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.5); /* 悬停时阴影效果变化 */
+            transform: scale(1.1);
+        }
+        #color-picker {
+            margin: 20px;
+            margin-top: 0px;
+            display: inline-block;
+            width: 60px;
+            height: 30px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.5s ease;
+            outline: none;
+        }
+
+        #color-picker:focus {
+            transform: scale(1.2);
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.8);
+        }
+        #color-picker:hover {
+            transform: scale(1.2);
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.8);
+        }
+
+        .colorset {
+            display: inline-block;
+            margin:20px;
+            width:230px;
+            height:70px;
+            font-weight: bold;
+            cursor: pointer;
+            background-color: #4488ff;
+            color: #fff;
+            border: none;
+            border-radius: 15px;
+            font-size: 20px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease, box-shadow 0.3s ease; /* 添加过渡效果 */
+
+        }
+
+        .colorset:hover{
+            background-color: #2255CC;
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3); /* 悬停时阴影效果变化 */
+        }
+
+        .para{
+            margin-left:20px;
+            margin-bottom:10px;
+            display: inline-block;
+        }
+
+        /* 调整滑块的样式 */
+        input[type="range"] {
+            -webkit-appearance: none; /* 隐藏默认的滑块样式 */
+            appearance: none;
+            width: 100%;
+            height: 10px;
+            background: #C3C3C3; /* 轨道的颜色 */
+            outline: none;
+            border-radius: 10px; /* 圆角 */
+        }
+
+        /* 调整滑块的样式 */
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none; /* 隐藏默认的滑块样式 */
+            appearance: none;
+            width: 20px; /* 滑块的宽度 */
+            height: 20px; /* 滑块的高度 */
+            background: #007bff; /* 滑块的颜色 */
+            border-radius: 30%; /* 将滑块样式设为圆形 */
+            cursor: pointer;
+        }
+
+        /* 设置滑块拖动时的样式 */
+        input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            background: #007bff;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        /* 设置滑块的悬停样式 */
+        input[type="range"]::-webkit-slider-thumb:hover {
+            background: #0056b3; /* 悬停时的颜色 */
+        }
+
+        input[type="range"]::-moz-range-thumb:hover {
+            background: #0056b3;
+        }
+        #achivoutput{
+            display: inline-block;
+            font-weight: bold;
+            font-size: 20px;
+            color: #fff;
+        }
+
+        .achivement button {
+            margin-top:10px;
+            cursor: pointer;
+            border: none;
+            font-size: 20px; /* 调整按钮字体大小 */
+            display: inline-block;
+            font-weight: bold;
+            background-color: #4488ff;
+            color: #fff;
+            border-radius: 15px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .achivement button:hover {
+            background-color: #2244aa; /* 按钮悬停时背景色变化 */
+            transform: scale(1.05); /* 鼠标悬停时按钮放大 */
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.5); /* 悬停时阴影效果变化 */
+        }
+        #achivementput{
+            display: block;
+            font-weight: bold;
+            margin-bottom: 10px;
+            margin-top: 20px;
+            text-align: left;
+            font-size: 20px;
+            color: #2266dd;
+        }
+        #skills-guide{
+            width: 70%;
+            margin: 30px auto;
+            border: 1px solid #ccc;
+            position: relative;
+            background-color: #fff;
+            border-radius: 30px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+            padding: 20px;
+        }
+        .navigation,.navigation2{
+            font-weight: bold;
+            cursor: pointer;
+            background-color: #ff4094;
+            color: #fff;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 5px;
+            margin: 5px 0;
+            font-size: 16px;
+            transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease; /* 添加过渡效果 */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 添加阴影效果 */
+        }
+        .navigation2{
+            padding: 10px 13px;
+        }
+        .navigation:hover,.navigation2:hover{
+            background-color: #ff0070;
+            transform: translateY(-10px);
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.5); /* 悬停时阴影效果变化 */
+            transform: scale(1.03);
+        }
+        .navigation:focus,.navigation2:focus {
+            background-color: #4488ff;
+            transform: scale(1.03);
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.8);
+        }
+        red {
+            color: red;
+        }
+        green{
+            color: #229966;
+        }
+
+        #skill-details {
+            padding: 20px;
+        }
+        .skilltitle {
+            text-align: center;
+            color: #222;
+            font-size: 28px;
+        }
+        .sourceofexp {
+            color: #333;
+            margin-bottom: 10px;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 22px;
+        }
+        #skill-details table,.showexpperhour{
+            width: 100%;
+            border-collapse: collapse;
+        }
+        #skill-details table th,
+        #skill-details table td,
+        .showexpperhour th,
+        .showexpperhour td{
+            padding: 8px;
+            border: 1px solid #dfdfdf;
+            text-align: center;
+        }
+        #skill-details table td,
+        .showexpperhour td{
+            font-size: 15px
+        }
+        #skill-details table th,
+        .showexpperhour th{
+            background-color: #f2f2f2;
+        }
+        #skill-details table tr:nth-child(even){
+            background-color: #f2f2f2;
+        }
+        #skill-details table tr:hover,
+        .showexpperhour tr:hover{
+            background-color: #ddd;
+        }
+
+        #skill-details h4 {
+            margin-top: 40px;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #555;
+            font-size: 22px;
+        }
+
+        #skill-details p {
+            margin-top: 5px;
+        }
+
+        .guidecard{
+            display: block;
+            margin-top:15px;
+            cursor: pointer;
+            border: none;
+            padding: 15px;
+            background-color: #3377ff;
+            color: #fff;
+            border-radius: 15px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .guidecard:hover{
+            background-color: #2244aa; /* 按钮悬停时背景色变化 */
+            transform: scale(1.02); /* 鼠标悬停时按钮放大 */
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.5); /* 悬停时阴影效果变化 */
+        }
+
+        .statisticscard{
+            background-color: #FFF;
+            color: #000;
+            border-radius: 15px;
+            padding: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.6);
+        }
+        yellow{
+            color: #ffdd11;
+        }
+        grey{
+            color: #888;
+        }
+
+
+
+        /* 导航栏样式 */
+        .navbar {
+            background-color: rgba(48, 48, 48, 0.95);
+            color: white;
+            padding: 10px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 60px;
+            height: 100%;
+            overflow-x: hidden;
+            transition: 0.5s;
+        }
+
+        .navbar.collapsed {
+            width: 60px;
+        }
+
+        .navbar.expanded {
+            width: 140px;
+        }
+
+        .navbar-icon {
+            font-size: 24px;
+            margin: 10px;
+            cursor: pointer;
+            transition:  transform 0.3s ease;
+        }
+        .navbar-icon:hover{
+            transform: scale(1.1);
+        }
+
+        .navbar-links {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .navbar-link {
+            margin: 10px;
+            text-decoration: none;
+            color: white;
+            display: flex;
+            align-items: center;
+
+            cursor: pointer;
+            border: none;
+            padding: 10px;
+            background-color: #444;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .navbar-link:hover{
+            background-color: rgba(96, 96, 96, 0.8); /* 按钮悬停时背景色变化 */
+            transform: scale(1.02); /* 鼠标悬停时按钮放大 */
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.5); /* 悬停时阴影效果变化 */
+        }
+        .navbar-link .icon {
+            margin-right: 10px;
+        }
+        #main-page{
+            margin-left:80px;
+        }
+    </style>
+</head>
+<body>
+    <div id="main-page">
+        <h1>《星光共谱曲》技能查询系统</h1>
+        <!-- 函数图 -->
+        <div id="chart-container">
+            <h2 style="text-align: center;">等级-经验函数图</h2>
+            <div id="chart"></div>
+            <input type="range" class="zoom-slider" min="0" max="2024" value="2024" step="1">
+            <div class="colorset">
+                <p class="para">颜色修改
+                    <input type="color" id="color-picker" value="#007bff">
+                </p>
+            </div>
+        </div>
+        <!-- 时间计算 -->
+        <div id="calculate">
+            <h2 style="text-align: center;">目标等级➤计算时间</h2>
+            <div class="input-group">
+                <label for="current-level">当前等级：
+                <input type="number" id="current-level" min="1" value="1">
+                <button onclick="decreaseValue('current-level')">-</button>
+                <button onclick="increaseValue('current-level')">+</button></label>
+            </div>
+            <div class="input-group">
+                <label for="target-level">目标等级：
+                <input type="number" id="target-level" min="1" value="1">
+                <button onclick="decreaseValue('target-level')">-</button>
+                <button onclick="increaseValue('target-level')">+</button></label>
+            </div>
+            <div class="input-group">
+                <label for="exp-per-hour">每小时获得经验值：</label>
+                <input type="number" id="exp-per-hour" min="1" value="366500">
+                <button onclick="decreaseValue('exp-per-hour')">-</button>
+                <button onclick="increaseValue('exp-per-hour')">+</button>
+            </div>
+            <div class="input-group">
+                <label for="hours-per-day">平均每天挂机时间（小时）：</label>
+                <input type="number" id="hours-per-day" min="0.5" max="24" value="1">
+                <button onclick="decreaseValue('hours-per-day')">-</button>
+                <button onclick="increaseValue('hours-per-day')">+</button>
+            </div>
+            <div class="show_expperhour">
+                    <h3 style="margin-top:0px">经验值获取参考</h3>
+                    <table class="showexpperhour" border="1" style="width: 80%;margin:auto;">
+                        <tr>
+                            <th>技能（主动）</th>
+                            <th>剑术</th>
+                            <th>斧技</th>
+                            <th>杂技</th>
+                            <th>炼金</th>
+                            <th>修理</th>
+
+                        </tr>
+                        <tr>
+                            <td><b>每小时经验(exp/h)</b></td>
+                            <td><red style="font-weight: bold;">未知</red></td>
+                            <td><red style="font-weight: bold;">未知</red></td>
+                            <td><red style="font-weight: bold;">未知</red></td>
+                            <td><red style="font-weight: bold;">未知</red></td>
+                            <td><red style="font-weight: bold;">未知</red></td>
+                        </tr>
+                        <tr></tr>
+                        <tr>
+                            <th>技能（挂机）</th>
+                            <th>挖矿</th>
+                            <th>挖掘</th>
+                            <th>钓鱼</th>
+                            <th>伐木</th>
+                            <th>草药学</th>
+                        </tr>
+                        <tr>
+                            <td><b>每小时经验(exp/h)</b></td>
+                            <td><red style="font-weight: bold;">未知</red></td>
+                            <td><red style="font-weight: bold;">未知</red></td>
+                            <td><green style="font-weight: bold;">366500</green></td>
+                            <td><red style="font-weight: bold;">未知</red></td>
+                            <td><green style="font-weight: bold;">1701000</green></td>
+                        </tr>
+                    </table>
+                </div>
+            <div id="result">
+                <div id="output"></div>
+                <br>
+                <button onclick="calculateExp()" id="calculate-btn">计算</button>
+            </div>
+            <div class="achivement">
+                <button onclick="checkachive()">
+                    <p class="para" style="margin-top:30px;">已收集成就数：<div id="achivoutput" style="margin-right:30px;"></div></p>
+                </button>
+            </div>
+            <div id="achivementput" style="margin-left:30px;"></div>
+        </div>
+        <!-- 等级计算 -->
+        <div id="calculate_2">
+            <h2 style="text-align: center;">目标时间➤计算等级</h2>
+            <div class="input-group">
+                <label for="current-level">当前等级：
+                <input type="number" id="current-level_2" min="1" value="1">
+                <button onclick="decreaseValue('current-level_2')">-</button>
+                <button onclick="increaseValue('current-level_2')">+</button></label>
+            </div>
+            <div class="input-group">
+                <label for="exp-per-hour">每小时获得经验值：(钓鱼：366500)</label>
+                <input type="number" id="exp-per-hour_2" min="1" value="366500">
+                <button onclick="decreaseValue('exp-per-hour_2')">-</button>
+                <button onclick="increaseValue('exp-per-hour_2')">+</button>
+            </div>
+            <div class="input-group">
+                <label for="hours-per-day">挂机总时间（小时）：</label>
+                <input type="number" id="hours-per-day_2" min="0"  value="1">
+                <button onclick="decreaseValue('hours-per-day_2')">-</button>
+                <button onclick="increaseValue('hours-per-day_2')">+</button>
+            </div>
+            <div class="show_expperhour">
+                    <h3 style="margin-top:0px">经验值获取参考</h3>
+                    <table class="showexpperhour" border="1" style="width: 80%;margin:auto;">
+                        <tr>
+                            <th>技能（主动）</th>
+                            <th>剑术</th>
+                            <th>斧技</th>
+                            <th>杂技</th>
+                            <th>炼金</th>
+                            <th>修理</th>
+
+                        </tr>
+                        <tr>
+                            <td><b>每小时经验(exp/h)</b></td>
+                            <td><red style="font-weight: bold;">未知</red></td>
+                            <td><red style="font-weight: bold;">未知</red></td>
+                            <td><red style="font-weight: bold;">未知</red></td>
+                            <td><red style="font-weight: bold;">未知</red></td>
+                            <td><red style="font-weight: bold;">未知</red></td>
+                        </tr>
+                        <tr></tr>
+                        <tr>
+                            <th>技能（挂机）</th>
+                            <th>挖矿</th>
+                            <th>挖掘</th>
+                            <th>钓鱼</th>
+                            <th>伐木</th>
+                            <th>草药学</th>
+                        </tr>
+                        <tr>
+                            <td><b>每小时经验(exp/h)</b></td>
+                            <td><red style="font-weight: bold;">未知</red></td>
+                            <td><red style="font-weight: bold;">未知</red></td>
+                            <td><green style="font-weight: bold;">366500</green></td>
+                            <td><red style="font-weight: bold;">未知</red></td>
+                            <td><green style="font-weight: bold;">1701000</green></td>
+                        </tr>
+                    </table>
+                </div>
+            <div id="result_2">
+                <div id="output_2"></div>
+                <br>
+                <button onclick="calculateExp_2()" id="calculate-btn_2">计算</button>
+            </div>
+        </div>
+        <!-- 技能图鉴 -->
+        <div id="skills-guide">
+            <h2 style="text-align: center;">技能图鉴</h2>
+            <!-- 导航栏 -->
+            <div id="skill-buttons">
+                <button class="navigation" onclick="showSkill('swordsmanship')">剑 术</button>
+                <button class="navigation" onclick="showSkill('axe_mastery')">斧 技</button>
+                <button class="navigation" onclick="showSkill('acrobatics')">杂 技</button>
+                <button class="navigation" onclick="showSkill('alchemy')">炼 金</button>
+                <button class="navigation" onclick="showSkill('repair')">修 理</button>
+                <button class="navigation" onclick="showSkill('mining')">挖 矿</button>
+                <button class="navigation" onclick="showSkill('excavate')">挖 掘</button>
+                <button class="navigation" onclick="showSkill('fishing')">钓 鱼</button>
+                <button class="navigation" onclick="showSkill('felling')">伐 木</button>
+                <button class="navigation2" onclick="showSkill('herbology')">草药学</button>
+                <!-- 其他技能按钮 -->
+            </div>
+
+            <!-- 技能详细介绍 -->
+            <div id="skill-details">
+            <!-- 剑术详细介绍 N-->
+                <div id="swordsmanship" style="display: none;">
+                    <h3 class="skilltitle" style="text-align:center">🗡剑术🤺</h3>
+                    <h3 class="sourceofexp">经验来源：<green>攻击怪物</green></h3>
+                    <h4>子技能及其介绍</h4>
+                        <table border="1">
+                            <tr>
+                                <th>子技能</th>
+                                <th>获得条件</th>
+                                <th>子技能等级上限</th>
+                                <th>技能描述</th>
+                            </tr>
+                            <tr>
+                              <td><b>撕裂</b></td>
+                                <td>剑术达到<green style="font-weight: bold;">1</green>级时</td>
+                                <td><grey>未知</grey></td>
+                                <td>造成流血的持续性伤害</td>
+                            </tr>
+                            <tr>
+                                <td><b>利刃突刺</b></td>
+                                <td>剑术达到<green style="font-weight: bold;">50</green>级时</td>
+                                <td>1</td>
+                                <td>在范围攻击(横扫)时，造成攻击的部分伤害，有几率伴随撕裂</td>
+                            </tr>
+                            <tr>
+                                <td><b><grey>未知能力</grey></b></td>
+                                <td>剑术达到<green style="font-weight: bold;">100</green>级时</td>
+                                <td><grey>未知</grey></td>
+                                <td><grey>未知</grey></td>
+                            </tr>
+                            <tr>
+                                <td><b><grey>未知能力</grey></b></td>
+                                <td>剑术达到<green style="font-weight: bold;">200</green>级时</td>
+                                <td><grey>未知</grey></td>
+                                <td><grey>未知</grey></td>
+                            </tr>
+                            <tr>
+                                <td><b><grey>未知能力</grey></b></td>
+                                <td>剑术达到<green style="font-weight: bold;">750</green>级时</td>
+                                <td><grey>未知</grey></td>
+                                <td><grey>未知</grey></td>
+                            </tr>
+                            <!-- 其他子技能 -->
+                        </table>
+
+                    <h4>统 计(50级参考)</h4>
+                        <div class="statisticscard">
+                            <ul style="font-weight: bold;">
+                                <li>撕裂概率：<red>15.0%</red></li><br>
+                                <li>撕裂：5 tick 时间 [对玩家造成 <red>5</red> 伤害] [对怪物造成 {<red>2</red>} 伤害]</li><br>
+                                <li>撕裂每造成的纯伤害：<red>0.1</red>对玩家，<red>0.5</red>对怪物</li>
+                            </ul>
+                        </div>
+                    <h4>向 导</h4>
+                    <p><div class="guidecard"><p style="font-weight: bold;">关于剑术：</p><p>这个技能在使用剑进行战斗时，提供各种加成。</p></div>
+                        <div class="guidecard"><p style="font-weight: bold;">经验来源：</p><p>经验值是通过用剑对怪物或其他玩家造成伤害获得。</p></div>
+                        <div class="guidecard"><p style="font-weight: bold;">如何使用<yellow>利刃突刺</yellow>？</p><p>利刃突刺是一个主动技能，将剑拿在手中并按下右键激活，这个技能让你发动范围攻击，提供25%的伤害加成，并伴有撕裂效果。</p></div>
+                        <div class="guidecard"><p style="font-weight: bold;"><yellow>反击</yellow>如何工作？</p><p>反击是一个主动技能，格挡对手对你的伤害，并有几率反射50%的伤害给对手。</p></div>
+                        <div class="guidecard"><p style="font-weight: bold;"><yellow>撕裂</yellow>如何工作？</p><p>撕裂是一个被动技能，攻击时有几率出发撕裂撕裂。<br>撕裂会对对手造成持续的流血伤害，直到持续时间结束或对手死亡，持续时间取决于你的剑术等级。</p></div>
+                    </p>
+                </div>
+            <!-- 斧技详细介绍 N-->
+                <div id="axe_mastery" style="display: none;">
+                    <h3 class="skilltitle" style="text-align:center">🪓斧技</h3>
+                    <h3 class="sourceofexp">经验来源：<green>攻击怪物</green></h3>
+                    <h4>子技能及其介绍</h4>
+                        <table border="1">
+                            <tr>
+                                <th>子技能</th>
+                                <th>获得条件</th>
+                                <th>子技能等级上限</th>
+                                <th>技能描述</th>
+                            </tr>
+                            <tr>
+                                <td><b>暴击</b></td>
+                                <td>斧技达到<green style="font-weight: bold;">1</green>级时</td>
+                                <td>1</td>
+                                <td>双倍伤害</td>
+                            </tr>
+                            <tr>
+                              <td><b>破甲</b></td>
+                                <td>斧技达到<green style="font-weight: bold;">1</green>级时</td>
+                                <td><grey>未知</grey></td>
+                                <td>用足够的力量击碎护甲</td>
+                            </tr>
+                            <tr>
+                                <td><b><grey>未知能力</grey></b></td>
+                                <td>斧技达到<green style="font-weight: bold;">50</green>级时</td>
+                                <td><grey>未知</grey></td>
+                                <td><grey>未知</grey></td>
+                            </tr>
+                            <tr>
+                                <td><b><grey>未知能力</grey></b></td>
+                                <td>斧技达到<green style="font-weight: bold;">50</green>级时</td>
+                                <td><grey>未知</grey></td>
+                                <td><grey>未知</grey></td>
+                            </tr>
+                            <tr>
+                                <td><b><grey>未知能力</grey></b></td>
+                                <td>斧技达到<green style="font-weight: bold;">100</green>级时</td>
+                                <td><grey>未知</grey></td>
+                                <td><grey>未知</grey></td>
+                            </tr>
+                            <tr>
+                                <td><b><grey>未知能力</grey></b></td>
+                                <td>斧技达到<green style="font-weight: bold;">250</green>级时</td>
+                                <td><grey>未知</grey></td>
+                                <td><grey>未知</grey></td>
+                            </tr>
+                            <!-- 其他子技能 -->
+                        </table>
+
+                    <h4>统 计(15级参考)</h4>
+                        <div class="statisticscard">
+                            <ul style="font-weight: bold;">
+                                <li>破甲：对护甲造成<red>6.5</red>点额外伤害</li><br>
+                                <li>暴击机率：<red>0.00% </red> </li>
+                            </ul>
+                        </div>
+                    <h4>向 导</h4>
+                    <p><div class="guidecard"><p style="font-weight: bold;">关于斧技：</p><p>有了斧头技能，斧子不再只是砍树而已。<br>你还可以砍其他生物和玩家来赚取经验。<br>打击生物时附加击退效果。<br>还会对生物和玩家造成致命伤害。<br>你的斧子会像伐木机一样，轻松削掉敌人的护甲。<br>效果随着技能等级提高。</p></div>
+                        <div class="guidecard"><p style="font-weight: bold;">经验的获取：</p><p>手持斧子攻击其他生物或玩家。</p></div>
+                        <div class="guidecard"><p style="font-weight: bold;">什么是<yellow>斩首者</yellow>？</p><p>这个技能会造成范围打击伤害。<br>伤害等于对主要攻击目标造成伤害的50%。<br>所以很容易清理掉一大片怪物。</p></div>
+                        <div class="guidecard"><p style="font-weight: bold;">什么是<yellow>致命一击</yellow>？</p><p>这是一个被动技能。<br>一定几率对目标造成额外伤害默认。<br>默认每2级增加0.1%。<br>对生物造成2倍伤害。<br>对玩家造成1.5倍伤害。</p></div>
+                        <div class="guidecard"><p style="font-weight: bold;">什么是<yellow>斧精通</yellow>？</p><p>这是一个被动技能。<br>使用斧子攻击时附加额外伤害，默认每50级额外伤害提高1点，4点额外伤害封顶。</p></div>
+                        <div class="guidecard"><p style="font-weight: bold;">什么是<yellow>破甲</yellow>？</p><p>用足够的力量击碎护甲！破甲是一个被动的能力，它有几率会损耗对手护甲的耐久值。<br>这个伤害会随着你斧技技能等级提升。</p></div>
+                        <div class="guidecard"><p style="font-weight: bold;">什么是<yellow>强力冲击</yellow>？</p><p>这是一个被动技能。<br>使用斧子攻击时一定几率给敌人带来巨大的冲击力。<br>默认几率为25%。<br>效果相当于 击退Ⅱ 的附魔效果。<br>此外还会对目标造成额外伤害。</p></div>
+                    </p>
+                </div>
+            <!-- 杂技详细介绍 N-->
+                <div id="acrobatics" style="display: none;">
+                    <h3 class="skilltitle" style="text-align:center">🤸‍♀️杂技</h3>
+                    <h3 class="sourceofexp">经验来源：<green>掉落</green></h3>
+                    <h4>子技能及其介绍</h4>
+                        <table border="1">
+                            <tr>
+                                <th>子技能</th>
+                                <th>获得条件</th>
+                                <th>子技能等级上限</th>
+                                <th>技能描述</th>
+                            </tr>
+                            <tr>
+                                <td><b>翻滚</b></td>
+                                <td>杂技达到<green style="font-weight: bold;">0</green>级时</td>
+                                <td>0</td>
+                                <td>减少或者取消掉落伤害</td>
+                            </tr>
+                            <tr>
+                              <td><b>闪避</b></td>
+                                <td>杂技达到<green style="font-weight: bold;">1</green>级时</td>
+                                <td>1</td>
+                                <td>减少一半所受攻击伤害</td>
+                            </tr>
+                        </table>
+
+                    <h4>统 计(343级参考)</h4>
+                        <div class="statisticscard">
+                            <ul style="font-weight: bold;">
+                                <li>闪避概率：<red>6.00%</red></li><br>
+                                <li>翻滚机率：<red>34.00%</red></li>
+                            </ul>
+                        </div>
+                    <h4>向 导</h4>
+                        <p><div class="guidecard"><p style="font-weight: bold;">关于杂技：</p><p>杂技是 mcMMO 中优雅移动的艺术。<br>它提供了战斗加成和环境伤害加成。</p></div>
+                          <div class="guidecard"><p style="font-weight: bold;">经验获取：</p><p>通过在战斗中闪避或者从高处跌落时受伤并幸存来获得经验。</p></div>
+                          <div class="guidecard"><p style="font-weight: bold;"><yellow>翻滚</yellow>是如何工作的？</p><p>当您受到跌落伤害时您有被动机会来免受伤害。<br>您可以在跌落中按住潜行键来提升触发几率。<br>这将触发一个优雅地翻滚而不是普通的翻滚。<br>优雅地翻滚似普通的翻滚但是它有双倍几率发生，并且能够提供比普通翻滚更高的伤害减免。<br>翻滚几率取决于您的技能等级。</p></div>
+                          <div class="guidecard"><p style="font-weight: bold;"><yellow>闪避</yellow>是如何工作的？</p><p>闪避是一个被动技能。<br>他在你被攻击时有一定几率被激发。<br>这个几率和你的技能等级有关。</p></div>
+                        </p>
+                </div>
+            <!-- 炼金详细介绍 N-->
+                <div id="alchemy" style="display: none;">
+                    <h3 class="skilltitle" style="text-align:center">🔥炼金</h3>
+                    <h3 class="sourceofexp">经验来源：<green>酿造药水</green></h3>
+                    <h4>子技能及其介绍</h4>
+                        <table border="1">
+                            <tr>
+                                <th>子技能</th>
+                                <th>获得条件</th>
+                                <th>子技能等级上限</th>
+                                <th>技能描述</th>
+                            </tr>
+                            <tr>
+                              <td><b>催化</b></td>
+                                <td>炼金达到<green style="font-weight: bold;">1</green>级时</td>
+                                <td>1</td>
+                                <td>提升药水酿造速度</td>
+                            </tr>
+                            <tr>
+                                <td><b>混合</b></td>
+                                <td>炼金达到<green style="font-weight: bold;">1</green>级时</td>
+                                <td>8</td>
+                                <td>酿造带有多重原料的药水</td>
+                            </tr>
+                            <!-- 其他子技能 -->
+                        </table>
+
+                    <h4>统 计(3级参考)</h4>
+                        <div class="statisticscard">
+                            <ul style="font-weight: bold;">
+                                <li>酿造速度：<red>1.01x</red></li><br>
+                                <li>混合等级：<red>1/8</red></li><br>
+                                <li>配方[<green>14</green>]：Blaze Powder，Fermented Spider，Eye，Ghast Tear，Glowstone Dust，Golden Carrot，Magma Cream，Nether Wart，Redstone，Glistering Melon Slice，Spider Eye，Sugar，Gunpowder，Pufferfish，Dragon Breath</li>
+                            </ul>
+                        </div>
+                    <h4>向 导</h4>
+                        <p><div class="guidecard"><p style="font-weight: bold;">关于炼金：</p><p>炼金是药水酿造的技能。<br>它提升了药水酿造时的速度，并且加入了新的（相对之前）无法获取的药水。</p></div>
+                            <div class="guidecard"><p style="font-weight: bold;">经验获取：</p><p>通过酿造药水来获取经验。</p></div>
+                            <div class="guidecard"><p style="font-weight: bold;"><yellow>催化</yellow>是如何工作的？</p><p>催化提升酿造的速度，在 1000 级时能达到最高 4 倍。<br>此能力默认在 100 级解锁。</p></div>
+                            <div class="guidecard"><p style="font-weight: bold;"><yellow>混合</yellow>是如何工作的？</p><p>混合允许使用自定义原料酿造更多药水。<br>特殊原料根据您的等级来解锁。<br>总共有 8 个等级需要解锁。</p></div>
+                            <div class="guidecard"><p style="font-weight: bold;">混合第 1 阶原料：</p><p>烈焰粉，发酵蛛眼，恶魂之泪，红石，萤石粉，糖，闪烁的西瓜，金胡萝卜，岩浆膏，地狱疣，蜘蛛眼，火药，睡莲，河豚(纯净药水)</p></div>
+                            <div class="guidecard"><p style="font-weight: bold;">混合第 2 阶原料：</p><p>胡萝卜（急迫药水）<br>黏液球（迟钝药水）</p></div>
+                            <div class="guidecard"><p style="font-weight: bold;">混合第 3 阶原料：</p><p>下界石英（伤害吸收药水）<br>红色蘑菇（跳跃药水）</p></div>
+                            <div class="guidecard"><p style="font-weight: bold;">混合第 4 阶原料：</p><p>苹果（生命加成药水）<br>腐肉（饥饿药水）</p></div>
+                            <div class="guidecard"><p style="font-weight: bold;">混合第 5 阶原料：</p><p>褐色蘑菇（反胃药水）<br>墨囊（失明药水）</p></div>
+                            <div class="guidecard"><p style="font-weight: bold;">混合第 6 阶原料：</p><p>蕨类（饱和药水）</p></div>
+                            <div class="guidecard"><p style="font-weight: bold;">混合第 7 阶原料：</p><p>毒马铃薯（Potion of Decay）（腐烂药水）</p></div>
+                            <div class="guidecard"><p style="font-weight: bold;">混合第 8 阶原料：</p><p>普通金苹果（抗性提升药水）</p></div>
+                        </p>
+                </div>
+            <!-- 修理详细介绍 N-->
+                <div id="repair" style="display: none;">
+                    <h3 class="skilltitle" style="text-align:center">🛠修理</h3>
+                    <h3 class="sourceofexp">经验来源：<green>修理</green></h3>
+                    <h4>子技能及其介绍</h4>
+                        <table border="1">
+                            <tr>
+                                <th>子技能</th>
+                                <th>获得条件</th>
+                                <th>子技能等级上限</th>
+                                <th>技能描述</th>
+                            </tr>
+                            <tr>
+                                <td><b>修理精通</b></td>
+                                <td>修理达到<green style="font-weight: bold;">1</green>级时</td>
+                                <td>1</td>
+                                <td>修理时提升恢复的耐久度</td>
+                            </tr>
+                            <tr>
+                              <td><b>秘法锻造</b></td>
+                                <td>修理达到<green style="font-weight: bold;">100</green>级时</td>
+                                <td>8</td>
+                                <td>修理附魔物品</td>
+                            </tr>
+                            <tr>
+                                <td><b>超级精通</b></td>
+                                <td>修理达到<green style="font-weight: bold;">400</green>级时</td>
+                                <td>1</td>
+                                <td>双倍修理效果</td>
+                            </tr>
+                        </table>
+
+                    <h4>统 计(400级参考)</h4>
+                        <div class="statisticscard">
+                            <ul style="font-weight: bold;">
+                                <li>秘法锻造：等级<red>3/8</red></li><br>
+                                <li>秘法锻造赔率：成功<green>30.0%</green>，失败<red>40.0%</red></li><br>
+                                <li>修理精通：额外恢复<red>80.00%</red>耐久</li><br>
+                                <li>超级精通概率：<red>40.00%</red></li>
+                            </ul>
+                        </div>
+                    <h4>向 导</h4>
+                        <p><div class="guidecard"><p style="font-weight: bold;">关于修理：</p><p>修理可以让你使用铁块来修理盔甲和工具。</p></div>
+                            <div class="guidecard"><p style="font-weight: bold;">经验来源：</p><p>使用mcMMo的铁砧修理工具或装备。<br>mcMMo默认的修理台是铁块，不要与用经验修复的铁砧混淆。</p></div>
+                            <div class="guidecard"><p style="font-weight: bold;">如何使用修理？</p><p>放置一个mcMMo铁砧（铁块），手持需要修理的道具，右键点击铁块，每次使用消耗一个物品。</p></div>
+                            <div class="guidecard"><p style="font-weight: bold;"><yellow>修理精通</yellow>如何工作？</p><p>修理精通提升修理时耐久恢复量。<br>额外修理的耐久值量取决于你的修理技能等级。</p></div>
+                            <div class="guidecard"><p style="font-weight: bold;"><yellow>超级修理</yellow>如何工作？</p><p>超级修理是一个被动技能，当修理一个物品时，会使物品的修理效果翻倍。</p></div>
+                            <div class="guidecard"><p style="font-weight: bold;"><yellow>秘法锻造</yellow>如何工作？</p><p>这是一个被动技能，允许你修复附魔物品。<br>修理物品时有一定几率保留附魔属性。<br>附魔属性可以保持现有的等级、降级到一个较低等级或完全消失。</p></div>
+                        </p>
+                </div>
+            <!-- 挖矿详细介绍 N-->
+                <div id="mining" style="display: none;">
+                    <h3 class="skilltitle" style="text-align:center">⛏挖矿</h3>
+                    <h3 class="sourceofexp">经验来源：<green>挖掘石头和矿物</green></h3>
+                    <h4>子技能及其介绍</h4>
+                        <table border="1">
+                            <tr>
+                                <th>子技能</th>
+                                <th>获得条件</th>
+                                <th>子技能等级上限</th>
+                                <th>技能描述</th>
+                            </tr>
+                            <tr>
+                              <td><b>双倍掉落</b></td>
+                                <td>挖矿达到<green style="font-weight: bold;">1</green>级时</td>
+                                <td>1</td>
+                                <td>双倍普通物品</td>
+                            </tr>
+                            <tr>
+                                <td><b>超级碎石机</b></td>
+                                <td>挖矿达到<green style="font-weight: bold;">50</green>级时</td>
+                                <td>1</td>
+                                <td>三倍掉落，挖掘速度提升</td>
+                            </tr>
+                        </table>
+
+                    <h4>统 计(521级参考)</h4>
+                        <div class="statisticscard">
+                            <ul style="font-weight: bold;">
+                                <li>爆破半径加成：<red>+2.0</red></li><br>
+                                <li>爆破开采：等级 <red>4/8</red>（增加<green>166.67%</green>矿物量，<red>2</red>倍掉落）</li><br>
+                                <li>爆炸伤害减少：<red>25.00%</red></li><br>
+                                <li>双倍掉落概率：<red>52.00%</red></li><br>
+                                <li>超级碎石机持续时间：<red>12</red> 秒</li>
+                            </ul>
+                        </div>
+                    <h4>向 导</h4>
+                        <p><div class="guidecard"><p style="font-weight: bold;">关于挖矿：</p><p>挖矿包括挖掘石头和矿物。<br>挖矿技能可以提供多重矿物掉落的奖励。</p></div>
+                            <div class="guidecard"><p style="font-weight: bold;">经验来源：</p><p>获取此技能的经验值，你必须拿着矿镐进行挖掘。<br>只有特定方块才能获取经验。</p></div>
+                            <div class="guidecard"><p style="font-weight: bold;">兼容材料：</p><p>石头，煤矿石，铁矿石，金矿石，钻石矿石，红石矿石，青金石矿石，黑曜石，苔石，末地石，萤石，地狱岩。</p></div>
+                            <div class="guidecard"><p style="font-weight: bold;">如何使用<yellow>超级碎石机</yellow>：</p><p>把镐子拿在你的手上，按下右键来准备你的镐子。<br>你将有4秒钟的时间来激发你的技能。<br>当你敲下对应的石头以后，超级碎石机将被激活。</p></div>
+                            <div class="guidecard"><p style="font-weight: bold;">什么是<yellow>超级碎石机</yellow>？</p><p>超级碎石机是一个主动技能。<br>它能使你在挖掉对应矿石的时候增加3倍掉落几率，并且在技能时间内瞬间破坏石头和矿石。</p></div>
+                            <div class="guidecard"><p style="font-weight: bold;">如何使用爆破开采：</p><p>把雷管拿在手上，默认的情况下是打火器。<br>在一定距离内右键点击TNT,这将会使得TNT在瞬间内爆炸。</p></div>
+                            <div class="guidecard"><p style="font-weight: bold;">什么是爆破开采？</p><p>爆破开采是开一个需要冷却时间的挖矿技能。<br>它能使你在使用TNT炸矿时获得额外奖励。<br>爆破开采总共有3个功能：<br>大号炸弹：使你的TNT爆炸范围扩大。<br>爆破专家：降低你受到TNT的伤害。<br>爆破开采：使你点燃的TNT炸下范围内一定数量的矿石。</p></div>
+                        </p>
+                </div>
+            <!-- 挖掘详细介绍 N-->
+                <div id="excavate" style="display: none;">
+                    <h3 class="skilltitle" style="text-align:center">🧹挖掘</h3>
+                    <h3 class="sourceofexp">经验来源：<green>挖到宝物</green></h3>
+                    <h4>子技能及其介绍</h4>
+                        <table border="1">
+                            <tr>
+                                <th>子技能</th>
+                                <th>获得条件</th>
+                                <th>子技能等级上限</th>
+                                <th>技能描述</th>
+                            </tr>
+                            <tr>
+                              <td><b>考古学</b></td>
+                                <td>挖掘达到<green style="font-weight: bold;">1</green>级时</td>
+                                <td><grey>未知</grey></td>
+                                <td>发掘大地的密码！<br>较高的挖掘等级使你在发掘土地宝藏时有较高几率获取经验球！</td>
+                            </tr>
+                            <tr>
+                                <td><b>暴走钻头</b></td>
+                                <td>挖掘达到<green style="font-weight: bold;">50</green>级时</td>
+                                <td>1</td>
+                                <td>三倍掉落，三倍经验，挖掘速度提升</td>
+                            </tr>
+                        </table>
+
+                    <h4>统 计(314级参考)</h4>
+                        <div class="statisticscard">
+                            <ul style="font-weight: bold;">
+                                <li>暴走钻头持续时间：<red>8</red> 秒</li><br>
+                                <li>考古学获取经验球的几率：<red>4.00%</red></li><br>
+                                <li>考古学获取经验球的数量：<red>2</red></li>
+                            </ul>
+                        </div>
+                    <h4>向 导</h4>
+                        <p><div class="guidecard"><p style="font-weight: bold;">关于挖掘：</p><p>挖掘是以挖掘泥土以寻找宝藏的行为。<br>通过挖掘，你将会找到隐藏的宝藏。<br>你挖的越多你找到的宝藏也就越多。</p></div>
+                            <div class="guidecard"><p style="font-weight: bold;">经验来源：</p><p>要获得该技能的经验你必须手持铲子挖掘。<br>只有特定的方块才能获得经验，挖掘到宝藏。</p></div>
+                            <div class="guidecard"><p style="font-weight: bold;">可以挖掘的方块：</p><p>草方块，泥土，沙子，粘土，砂砾，菌丝，灵魂沙，雪。</p></div>
+                            <div class="guidecard"><p style="font-weight: bold;">如何使用<yellow>暴走钻头</yellow>？</p><p>手拿铲子右键单击以进入准备状态。<br>一旦进入这种状态，你约有4秒的时间让工具点击与挖掘机能兼容的方块，这样就会激活暴走钻头技能。</p></div>
+                            <div class="guidecard"><p style="font-weight: bold;">什么是<yellow>暴走钻头</yellow>？</p><p>暴走钻头是一种与挖掘技能相关且有时间限制的能力。<br>它使你找到宝藏的几率增加三倍。<br>并且能瞬间打破兼容的方块。</p></div>
+                            <div class="guidecard"><p style="font-weight: bold;"><yellow>考古学</yellow>是怎样工作的？</p><p>挖掘出来的每一个宝藏的掉落物都有自己的技能等级要求。<br>因此很难说它对你的帮助有多大。<br>请记住，挖掘机能等级越高挖到的宝藏就越多。<br>还要记得每种兼容挖掘的方块都有自己独特的宝藏清单。<br>换句话说，你在泥土中找到的宝藏，但在沙砾中不一定能找到。</p></div>
+                            <div class="guidecard"><p style="font-weight: bold;">关于挖掘注意事项：</p><p>挖掘掉落物是完全可定制的，因此挖出的结果因服务器而异。</p></div>
+                        </p>
+                </div>
+            <!-- 钓鱼详细介绍 N-->
+                <div id="fishing" style="display: none;">
+                    <h3 class="skilltitle" style="text-align:center">🎣钓鱼</h3>
+                    <h3 class="sourceofexp">经验来源：<green>钓鱼（去研究吧）</green></h3>
+                    <h4>子技能及其介绍</h4>
+                        <table border="1">
+                            <tr>
+                                <th>子技能</th>
+                                <th>获得条件</th>
+                                <th>子技能等级上限</th>
+                                <th>技能描述</th>
+                            </tr>
+                            <tr>
+                              <td><b>冰钓</b></td>
+                                <td>钓鱼达到<green style="font-weight: bold;">1</green>级时</td>
+                                <td>1</td>
+                                <td>允许你在冰冷的环境下钓鱼</td>
+                            </tr>
+                            <tr>
+                                <td><b>钓鱼大师</b></td>
+                                <td>钓鱼达到<green style="font-weight: bold;">50</green>级时</td>
+                                <td>8</td>
+                                <td>钓鱼的效率提升，如果在船上钓鱼效果会更好</td>
+                            </tr>
+                            <tr>
+                                <td><b>淘金者</b></td>
+                                <td>钓鱼达到<green style="font-weight: bold;">100</green>级时</td>
+                                <td>8</td>
+                                <td>钓出各种各样的物品</td>
+                            </tr>
+                            <tr>
+                                <td><b>抖动</b></td>
+                                <td>钓鱼达到<green style="font-weight: bold;">150</green>级时</td>
+                                <td>1</td>
+                                <td>用鱼竿把玩家或生物身上的物品抖下来</td>
+                            </tr>
+                            <tr>
+                                <td><b>魔法猎人</b></td>
+                                <td>钓鱼达到<green style="font-weight: bold;">200</green>级时</td>
+                                <td>1</td>
+                                <td>找到附魔物品</td>
+                            </tr>
+                            <tr>
+                                <td><b>渔夫的食谱</b></td>
+                                <td>钓鱼达到<green style="font-weight: bold;">200</green>级时</td>
+                                <td>5</td>
+                                <td>提高鱼类食物恢复的饱食度</td>
+                            </tr>
+                            <!-- 其他子技能 -->
+                        </table>
+
+                    <h4>统 计(1000级（满级）参考)</h4>
+                        <div class="statisticscard">
+                            <ul style="font-weight: bold;">
+                                <li>渔夫的食谱：等级<red> 5（满级）</red></li><br>
+                                <li>冰钓：冰钓</li><br>
+                                <li>魔法猎人几率：<red>25.00%</red></li><br>
+                                <li>钓鱼的最短等待时间减少：<red>4.0</red> 秒</li><br>
+                                <li>钓鱼的最长等待时间减少：<red>12.0</red> 秒</li><br>
+                                <li>抖动几率：<red>30.00%</red></li><br>
+                                <li>淘金者等级：<red>8/8（满级）</red></li><br>
+                                <li>掉落率：<p>
+                                    <i style="color:#777777">一般</i>：<green style="font-weight: bold;font-size: 18px;margin-right:20px;">0.10%</green>
+                                    <i style="color:#33aa33">普通</i>：<green style="font-weight: bold;font-size: 18px;">1.50%</green><br>
+                                    <i style="color:#222288">稀有</i>：<green style="font-weight: bold;font-size: 18px;margin-right:20px;">6.00%</green>
+                                    <i style="color:#882288">罕见</i>：<green style="font-weight: bold;font-size: 18px;">7.50%</green><br>
+                                    <i style="color:#ffaa22">史诗</i>：<green style="font-weight: bold;font-size: 18px;margin-right:20px;">5.00%</green>
+                                    <i style="color:#22bbbb">神话</i>：<green style="font-weight: bold;font-size: 18px;">0.25%</green><br>
+                                </p></li><br>
+                                <!-- 其他统计 -->
+                            </ul>
+                        </div>
+                    <h4>向 导</h4>
+                        <p><div class="guidecard"><p style="font-weight: bold;">关于钓鱼：</p><p>关于钓鱼技能，钓鱼再次使人振奋！<br>找到隐藏的宝藏从怪物身上抖落物品。</p></div>
+                            <div class="guidecard"><p style="font-weight: bold;">经验来源：</p><p>钓鱼。</p></div>
+                            <div class="guidecard"><p style="font-weight: bold;"><yellow>淘金者</yellow>如何工作？</p><p>这个能力使你在钓鱼时找到宝藏，并且物品有小几率带有附魔。<br>钓鱼技能的每一个级别的宝藏都有概率掉落。<br>宝藏的概率取决于稀有度的掉落几率。<br>你的钓鱼等级越高，你越有可能找到更好的宝藏。<br>获得宝藏的几率也越高。</p></div>
+                            <div class="guidecard"><p style="font-weight: bold;"><yellow>冰钓</yellow>如何工作？</p><p>这个被动技能可以让你在冰湖中钓鱼！。<br>将你的鱼竿扔在冰湖里，这个能力会在冰上形成一个小孔供你钓鱼。</p></div>
+                            <div class="guidecard"><p style="font-weight: bold;"><yellow>钓鱼大师</yellow>如何工作？</p><p>这个被动增加了钓鱼时咬钩的几率。<br>当你解锁这种能力时，在船上或者在海洋生物群系钓鱼时，钓到鱼的几率增加一倍。</p></div>
+                            <div class="guidecard"><p style="font-weight: bold;"><yellow>抖动</yellow>如何工作？</p><p>这种主动技能可以让你用鱼竿勾住生物从他们身上获取物品。<br>生物会掉落他们死亡时掉落的物品，也可能获得怪物的头。<br>一般情况下这些头无法在生存模式中获得。</p></div>
+                            <div class="guidecard"><p style="font-weight: bold;"><yellow>渔夫的食谱</yellow>如何工作？</p><p>这个被动增加了吃鱼时恢复的饱食度。</p></div>
+                            <div class="guidecard"><p style="font-weight: bold;">关于钓鱼的说明：</p><p>钓鱼的掉落物是可以自定义的，所以掉落物因服务器而异。</p></div>
+                    </p>
+                </div>
+            <!-- 伐木详细介绍 N-->
+                <div id="felling" style="display: none;">
+                    <h3 class="skilltitle" style="text-align:center">🪓伐木</h3>
+                    <h3 class="sourceofexp">经验来源：<green>砍伐树木</green></h3>
+                    <h4>子技能及其介绍</h4>
+                        <table border="1">
+                            <tr>
+                                <th>子技能</th>
+                                <th>获得条件</th>
+                                <th>子技能等级上限</th>
+                                <th>技能描述</th>
+                            </tr>
+                            <tr>
+                              <td><b>树木丰收</b></td>
+                                <td>伐木达到<green style="font-weight: bold;">1</green>级时</td>
+                                <td>1</td>
+                                <td>巧妙地获取更多木头<br>有几率双倍掉落</td>
+                            </tr>
+                            <tr>
+                                <td><b>伐木工</b></td>
+                                <td>伐木达到<green style="font-weight: bold;">50</green>级时</td>
+                                <td>1</td>
+                                <td>爆发式砍树</td>
+                            </tr>
+                            <tr>
+                                <td><b>秋风扫落叶</b></td>
+                                <td>伐木达到<green style="font-weight: bold;">150</green>级时</td>
+                                <td>1</td>
+                                <td>扫除树叶</td>
+                            </tr>
+                            <tr>
+                                <td><b><grey>未知能力</grey></b></td>
+                                <td>伐木达到<green style="font-weight: bold;">300</green>级时</td>
+                                <td><grey>未知</grey></td>
+                                <td><grey>未知</grey></td>
+                            </tr>
+                        </table>
+
+                    <h4>统 计(161级参考)</h4>
+                        <div class="statisticscard">
+                            <ul style="font-weight: bold;">
+                                <li>树木丰收双倍几率：<red>16.00%</red></li><br>
+                                <li>秋风扫落叶：扫除树叶</li><br>
+                                <li>爆发式砍树持续时间：<red>5</red> 秒</li>
+                            </ul>
+                        </div>
+                    <h4>向 导</h4>
+                        <p><div class="guidecard"><p style="font-weight: bold;">关于伐木：</p><p>伐木是关于砍树的。</p></div>
+                          <div class="guidecard"><p style="font-weight: bold;">经验来源：</p><p>破坏木头类的方块就会获得伐木经验。</p></div>
+                    <div class="guidecard"><p style="font-weight: bold;"><yellow>伐木工</yellow>如何工作？</p><p>伐木工是一个主动技能。<br>在手持斧头的同时右键并破坏木头以激活伐木工，这将瞬间破坏整棵树。</p></div>
+                          <div class="guidecard"><p style="font-weight: bold;"><yellow>秋风扫落叶</yellow>如何工作？</p><p>秋风扫落叶是一个被动技能。<br>当斧头击中树叶方块时会导致瞬间消失。<br>默认情况下，100级解锁。</p></div>
+                          <div class="guidecard"><p style="font-weight: bold;"><yellow>树木丰收</yellow>如何工作？</p><p>这个被动技能使你在砍树时有几率掉落双倍木头。</p></div>
+                        </p>
+                </div>
+            <!-- 草药学详细介绍 N-->
+                <div id="herbology" style="display: none;">
+                    <h3 class="skilltitle" style="text-align:center">☘草药学🍀</h3>
+                    <h3 class="sourceofexp">经验来源：<green>收获作物</green></h3>
+                    <h4>子技能及其介绍</h4>
+                        <table border="1">
+                            <tr>
+                                <th>子技能</th>
+                                <th>获得条件</th>
+                                <th>子技能等级上限</th>
+                                <th>技能描述</th>
+                            </tr>
+                            <tr>
+                              <td><b>海拉尔的祝福</b></td>
+                                <td>草药学达到<green style="font-weight: bold;">0</green>级时</td>
+                                <td>0</td>
+                                <td>给予小概率找到稀有物品的能力</td>
+                            </tr>
+                            <tr>
+                                <td><b>菌丝化</b></td>
+                                <td>草药学达到<green style="font-weight: bold;">0</green>级时</td>
+                                <td>0</td>
+                                <td>向泥土&草地散播菌丝</td>
+                            </tr>
+                            <tr>
+                                <td><b>双倍掉落</b></td>
+                                <td>草药学达到<green style="font-weight: bold;">1</green>级时</td>
+                                <td>1</td>
+                                <td>双倍物品</td>
+                            </tr>
+                            <tr>
+                                <td><b>大地祝福</b></td>
+                                <td>草药学达到<green style="font-weight: bold;">50</green>级时</td>
+                                <td>1</td>
+                                <td>播撒大地之神的恩惠，获得3倍掉率</td>
+                            </tr>
+                            <tr>
+                                <td><b>农夫食谱</b></td>
+                                <td>草药学达到<green style="font-weight: bold;">200</green>级时</td>
+                                <td><grey>未知</grey></td>
+                                <td>食用农产品时额外回复饥饿度</td>
+                            </tr>
+                        </table>
+
+                    <h4>统 计(400级参考)</h4>
+                        <div class="statisticscard">
+                            <ul style="font-weight: bold;">
+                                <li>双倍掉落几率：<red>40.00%</red></li><br>
+                                <li>农夫食谱：等级 <red>2</red></li><br>
+                                <li>大地祝福持续时间：<red>10</red> 秒</li><br>
+                                <li>园艺大师触发机率：<red>40.00%</red></li><br>
+                                <li>园艺大师阶段：作物生长在第 <red>1</red> 阶段</li><br>
+                                <li>海拉尔的祝福的几率：<red>4.00%</red></li><br>
+                                <li>菌丝化概率：<red>20.00%</red></li>
+                                <!-- 其他统计 -->
+                            </ul>
+                        </div>
+                    <h4>向 导</h4>
+                        <p><div class="guidecard"><p style="font-weight: bold;">关于草药学：</p><p>草药学是关于采集草药与植物的技能。</p></div>
+                            <div class="guidecard"><p style="font-weight: bold;">经验来源：</p><p>采集草药或植物。</p></div>
+                            <div class="guidecard"><p style="font-weight: bold;">可作用的草药/植物：</p><p>小麦，马铃薯，胡萝卜，西瓜，南瓜，甘蔗，可可豆，花，仙人掌，蘑菇，地狱疣，莲叶，藤蔓。</p></div>
+                            <div class="guidecard"><p style="font-weight: bold;"><yellow>大地祝福</yellow>如何工作？</p><p>大地祝福是一个主动技能。<br>当你手持锄头时，点击右键可发动技能。<br>大地祝福提高三倍收获的机率，同时也让玩家有能力使用身上的种子来转化方块并赋予生命。</p></div>
+                            <div class="guidecard"><p style="font-weight: bold;">园艺大师(作物)如何工作？</p><p>这是一个被动技能，让作物在采集时自动种回去。概率取决于你的草药学技能等级。</p></div>
+                            <div class="guidecard"><p style="font-weight: bold;">园艺大师(圆石/石砖/泥土)如何工作？</p><p>这是一个主动技能。<br>让你在手拿着种子时，对圆石石/石砖/泥土，点击右键，可使它们变成苔石草方块等，会消耗一颗种子。</p></div>
+                            <div class="guidecard"><p style="font-weight: bold;"><yellow>衣夫食谱</yellow>如何工作？</p><p>这是一个被动技能，可增加下列食物的饱食度恢复：<br>面包，曲奇，西瓜，蘑菇汤，胡萝卜，马铃薯。</p></div>
+                            <div class="guidecard"><p style="font-weight: bold;"><yellow>海拉尔的祝福</yellow>如何工作？</p><p>这是一个主动技能。<br>有机率在用剑破坏特定方块时获得稀有道具。</p></div>
+                            <div class="guidecard"><p style="font-weight: bold;"><yellow>双倍掉落</yellow>如何工作？</p><p>这是一个被动技能，使玩家能加倍收获。</p></div>
+                        </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="navbar collapsed" id="navbar">
+        <!-- 导航栏展开按钮 -->
+        <div class="navbar-icon" onclick="toggleNavbar()">
+            <i class="fas fa-bars"></i>
+        </div>
+        <!-- 导航链接 -->
+        <div class="navbar-links">
+            <a href="#chart-container" class="navbar-link">
+                <i class="fa fa-line-chart icon"></i>
+<!--                <span class="sr-only">Loading...</span>-->
+                <span class="link-text">等级函数</span>
+            </a>
+            <a href="#calculate" class="navbar-link">
+                <i class="fa fa-clock icon"></i>
+                <span class="link-text">时间计算</span>
+            </a>
+            <a href="#calculate_2" class="navbar-link">
+                <i class="fa fa-level-up icon"></i>
+                <span class="link-text" style="padding:1px">等级计算</span>
+            </a>
+            <a href="#skills-guide" class="navbar-link">
+                <i class="fa fa-book icon"></i>
+                <span class="link-text">技能图鉴</span>
+            </a>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script>
+        var item_1=0,item_2=0,item_3=0,item_4=0,item_5=0,item_6=0,item_7=0,item_8=0,item_9=0;
+        var paraitem=0;
+        var chartmax=2024;
+        var chartOptions = {
+            chart: {
+                type: 'line',
+                zoom: {
+                    enabled: false
+                }
+            },
+            series: [{
+                name: '该等级升级所需经验',
+                data: []
+            }],
+            xaxis: {
+                type: 'numeric',
+                labels: {
+                    formatter: function (value) {
+                        return Math.floor(value);
+                    }
+                },
+                tickAmount: 10,
+                tickPlacement: 'between',
+                min: 0,
+                max: chartmax,
+            },
+            yaxis: {
+                labels: {
+                    formatter: function (value) {
+                        return Math.floor(value);
+                    }
+                }
+            },
+            grid: {
+                borderColor: '#f0f0f0',
+                padding: {
+                    right: 30,
+                    left: 20
+                }
+            }
+        };
+
+        var chart = new ApexCharts(document.querySelector("#chart"), chartOptions);
+        chart.render();
+
+        function generateData(start, end) {
+            var data = [];
+            for (var i = start; i <= end; i++) {
+                data.push({x: i, y: 0.32*Math.pow(i, 1.8) + 2500});
+            }
+            return data;
+        }
+
+        // 更新图表数据
+        function updateChartData(xMax) {
+            chart.updateSeries([{data: generateData(0, xMax)}]);
+        }
+
+        // 初始化图表
+        updateChartData(chartmax);
+
+        // 拖动进度条时更新图表
+        var slider = document.querySelector('.zoom-slider');
+        slider.addEventListener('input', function() {
+            updateChartData(parseInt(this.value));
+        });
+
+        // 监听颜色选择器的变化事件
+        var colorPicker = document.getElementById('color-picker');
+        colorPicker.addEventListener('input', function() {
+            var color = this.value;
+            // 更新图表线条颜色
+            chart.updateOptions({
+                colors: [color]
+            });
+        });
+
+        // 函数：减小输入框的值
+        function decreaseValue(inputId) {
+            var input = document.getElementById(inputId);
+            var value = parseInt(input.value);
+            if (value > input.min) {
+                input.value = value - 1;
+            }
+        }
+
+        // 函数：增加输入框的值
+        function increaseValue(inputId) {
+            var input = document.getElementById(inputId);
+            var value = parseInt(input.value);
+            input.value = value + 1;
+        }
+
+        // 函数：计算经验值
+        function calculateExp() {
+            var currentLevel = parseInt(document.getElementById('current-level').value);
+            var targetLevel = parseInt(document.getElementById('target-level').value);
+            var expPerHour = parseInt(document.getElementById('exp-per-hour').value);
+            var hoursPerDay = parseFloat(document.getElementById('hours-per-day').value);
+            if(targetLevel<currentLevel){
+                showCustomAlert("【计算无效】:等级错误",'需使"目标等级"≥"当前等级"QAQ',"error",'好的喵~૮₍ ˃ ⤙ ˂ ₎ა');
+                if(item_1==0){
+                    item_1=item_1+1;
+                    showCustomAlert("【达成成就】","反方向的升级？？ᓫ(°⌑°)ǃ","success","好耶！( ╹▽╹ )");
+                }
+                achiveshow();
+                return false;
+            }
+            if(currentLevel==666&&item_6==0){
+                item_6=item_6+1;
+                showCustomAlert("【达成成就】","还是（  ）大佬O_o","success","好好好");
+                achiveshow();
+                return false;
+            }
+            var totalExp = 0;
+            for (var i = currentLevel; i < targetLevel; i++) {
+                totalExp += 0.32 * Math.pow(i, 1.8) + 2500;
+            }
+            if(hoursPerDay==24&&item_7==0){
+                item_7=item_7+1;
+                showCustomAlert("【达成成就】","睡觉是什么？？🌙","success","按[g]快速猝死");
+                achiveshow();
+                return false;
+            }
+            var hours = totalExp / expPerHour;
+            if(hoursPerDay>24){
+                showCustomAlert("【计算无效】:时间错误","一天最多只有24小时哦！！QWQ","error",'好的喵~૮₍ ˃ ⤙ ˂ ₎ა');
+                if(item_3==0){
+                    item_3=item_3+1;
+                    showCustomAlert("【达成成就】","超越光速🌠","success","起飞！(ﾉ◕ヮ◕)ﾉ*.✧");
+                }
+                achiveshow();
+                return false;
+            }
+            if(targetLevel==250&&item_4==0){
+                if(item_4==0){
+                    item_4=item_4+1;
+                    showCustomAlert("【达成成就】","目标是坤级篮球大师！","success","按[F]拾取专武🏀");
+                }
+                achiveshow();
+                return false;
+            }
+            if(hoursPerDay<0){
+                showCustomAlert("【计算无效】:时间错误","你可以不挂机，但是不能预支时间Σ( ° △ °|||)","error",'好的喵~૮₍ ˃ ⤙ ˂ ₎ა');
+                if(item_2==0){
+                    item_2=item_2+1;
+                    showCustomAlert("【达成成就】","⭐时光倒流","success","好耶！( ╹▽╹ )");
+                }
+                achiveshow();
+                return false;
+            }
+            if(expPerHour<0){
+                showCustomAlert("【计算无效】:经验获取错误","经验只能为正哦awa","error",'好的喵~૮₍ ˃ ⤙ ˂ ₎ა');
+                achiveshow();
+                return false;
+            }
+            if(hoursPerDay==0){
+                showCustomAlert("【计算无效】:时间无效","即便穷尽时间，也不能达到","error",'好的喵~૮₍ ˃ ⤙ ˂ ₎ა');
+                if(item_5==0){
+                    item_5=item_5+1;
+                    showCustomAlert("【达成成就】","不积跬步无以至千里","success","好耶！( ╹▽╹ )");
+                }
+                achiveshow();
+                return false;
+            }
+            if(totalExp>100000000&&item_8==0){
+                if(item_8==0){
+                    item_8=item_8+1;
+                    showCustomAlert("【达成成就】","亿级经验高手⚠","success","肝王之王");
+                }
+                achiveshow();
+                return false;
+            }
+            if(expPerHour<=0){
+                showCustomAlert("【计算无效】:经验错误","珍爱生命，远离无用功","error",'好的喵~૮₍ ˃ ⤙ ˂ ₎ა');
+                if(item_9==0){
+                    item_9=item_9+1;
+                    showCustomAlert("【达成成就】","摸鱼祖师爷🐟","success","宇宙的尽头是摸鱼！( ╹▽╹ )");
+                }
+                achiveshow();
+                return false;
+            }
+            var days = hours / hoursPerDay;
+            var gexp = totalExp%10000
+            var wanxp = ((totalExp/10000)%10000+0.5).toFixed(0)-1
+            var yiexp = (totalExp/100000000+0.5).toFixed(0)-1
+            showCustomAlert("【计算成功】","芜湖✧(≖ ◡ ≖✿)，快去查看吧！","success","芜湖！(ᕑᗢᓫ∗)˒");
+            document.getElementById('output').innerHTML = "所需总经验值：" +totalExp.toFixed(0)+"  （ "+yiexp.toFixed(0)+" 亿 "+wanxp.toFixed(0)+" 万 "+gexp.toFixed(0)+ " ）<br><br>" +
+                                                            "所需时间：" + hours.toFixed(2)+ " 小时   （ " + days.toFixed(2)+" 天 ）";
+        }
+
+        function achiveshow(){
+            achivmentcount=item_1+item_2+item_3+item_4+item_5+item_6+item_7+item_8+item_9;
+            document.getElementById('achivoutput').innerHTML = achivmentcount+"/9";
+        }
+        var achivmentcount=item_1+item_2+item_3+item_4+item_5+item_6+item_7+item_8+item_9;
+        document.getElementById('achivoutput').innerHTML = achivmentcount+"/9";
+        // 提示框自定义
+        function showCustomAlert(inputtitle,inputtext,state,ESC) {
+            if(inputtext=="")inputtext="还没有任何成就哦~(つ﹏<。)";
+            Swal.fire({
+                title: inputtitle,
+                text: inputtext,
+                icon: state, // 提示框图标:'warning', 'success', 'error', 'info', 'question'
+                confirmButtonText: '好叭',
+                cancelButtonText: ESC,
+                showCancelButton: true,
+            });
+        }
+        function checkachive() {
+            text="";
+            a="";
+            b="info";
+            if(item_1==1){text=text+"♛成就1：反方向的升级？？ᓫ(°⌑°)ǃ<br>";}
+            if(item_2==1){text=text+"<br>♛成就2：⭐时光倒流<br>";}
+            if(item_3==1){text=text+"<br>♛成就3：超越光速🌠<br>";}
+            if(item_4==1){text=text+"<br>♛成就4：目标是坤级篮球大师！<br>";}
+            if(item_5==1){text=text+"<br>♛成就5：不积跬步无以至千里<br>";}
+            if(item_6==1){text=text+"<br>♛成就6：还是挂机大佬O_o<br>";}
+            if(item_7==1){text=text+"<br>♛成就7：睡觉是什么？？🌙<br>";}
+            if(item_8==1){text=text+"<br>♛成就8：亿级经验高手⚠<br>";}
+            if(item_9==1){text=text+"<br>♛成就9：摸鱼祖师爷🐟";}
+            if(achivmentcount>=1){a="成就收集栏已更新，当前已收集"+achivmentcount+"个，还差"+(9-achivmentcount)+"个";}
+            if(achivmentcount==9){a="已收集全成就";b="success"}
+            showCustomAlert("成就🏆",a,b,"还有高手？")
+            document.getElementById('achivementput').innerHTML = text;
+        }
+        function calculateExp_2(){
+            var currentLevel = parseInt(document.getElementById('current-level_2').value);
+            var expPerHour = parseInt(document.getElementById('exp-per-hour_2').value);
+            var hoursPerDay = parseFloat(document.getElementById('hours-per-day_2').value);
+            var totalExp = 0;
+            var targtexp = hoursPerDay*expPerHour;
+            if(hoursPerDay<0){
+                showCustomAlert("【计算无效】:时间错误","时光倒流的梗已经玩过啦！Σ( ° △ °|||)","error",'好的喵~૮₍ ˃ ⤙ ˂ ₎ა');
+                achiveshow();
+                return false;
+            }
+            if(expPerHour<0){
+                showCustomAlert("【计算无效】:经验获取错误","经验只能为正哦awa","error",'好的喵~૮₍ ˃ ⤙ ˂ ₎ა');
+                achiveshow();
+                return false;
+            }
+            for (var i = currentLevel; totalExp <= targtexp; i++) {
+                totalExp += 0.32 * Math.pow(i, 1.8) + 2500;
+            }
+            showCustomAlert("【计算成功】","芜湖✧(≖ ◡ ≖✿)，快去查看吧！","success","芜湖！(ᕑᗢᓫ∗)˒");
+            var targetlevel=i-1;
+            document.getElementById('output_2').innerHTML = "能获得"+targtexp+"经验，到达"+targetlevel+"级";
+        }
+        document.getElementById('output').innerHTML = "开始计算吧！";
+        document.getElementById('output_2').innerHTML = "开始计算吧！";
+
+        function showSkill(skillName) {
+            var skills = document.querySelectorAll('#skill-details > div');
+            skills.forEach(skill => {
+                if (skill.id === skillName) {
+                    skill.style.display = 'block';
+                } else {
+                    skill.style.display = 'none';
+                }
+            });
+        }
+
+        function toggleNavbar() {
+            var navbar = document.getElementById('navbar');
+            navbar.classList.toggle('collapsed');
+            navbar.classList.toggle('expanded');
+        }
+
+        showSkill('swordsmanship') ;
+    </script>
+</body>
+</html>
